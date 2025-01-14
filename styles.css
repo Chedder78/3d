@@ -9,6 +9,11 @@ body, html {
   color: #fff;
 }
 
+section {
+  padding: 20px;
+  text-align: center;
+}
+
 /* Floating Header */
 #floating-header {
   position: fixed;
