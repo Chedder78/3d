@@ -1,18 +1,31 @@
-// Select the floating header
-const floatingHeader = document.getElementById('floating-header');
+import * as THREE from 'three';
+import * as CANNON from 'cannon-es';
 
-// Add a scroll event listener
-window.addEventListener('scroll', () => {
-  const scrollY = window.scrollY; // Get the vertical scroll position
+// ----------------------------------------------
+// Three.js 3D Background
+// ----------------------------------------------
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = 5;
 
-  // Adjust the header's position and scaling based on scroll
-  const translateZ = Math.max(100 - scrollY * 0.1, 20); // Limit how far it "sinks"
-  const scale = Math.max(1 - scrollY * 0.001, 0.8); // Gradually shrink the header
-  const rotationX = scrollY * 0.05; // Slight rotation effect
-  const opacity = Math.max(1 - scrollY * 0.005, 0); // Gradually fade out
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+document.getElementById('three-container').appendChild(renderer.domElement);
 
-  // Apply transforms
-  floatingHeader.style.transform = `translateX(-50%) translateZ(${translateZ}px) scale(${scale}) rotateX(${rotationX}deg)`;
-  floatingHeader.style.opacity = opacity;
-});
+// Add Rotating Sphere to the Background
+const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
+const sphereMaterial = new THREE.MeshStandardMaterial({ color: 0x0077ff });
+const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+scene.add(sphere);
 
+const light = new THREE.DirectionalLight(0xffffff, 1);
+light.position.set(5, 5, 5).normalize();
+scene.add(light);
+
+function animate() {
+  sphere.rotation.y += 0.01;
+  renderer.render(scene, camera);
+  requestAnimationFrame(animate);
+}
+animate();
