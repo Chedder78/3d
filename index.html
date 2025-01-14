@@ -1,9 +1,77 @@
-<div id="floating-header">
-  <h1>3D Floating Header</h1>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maximalism - Interactive 3D Webpage</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- 3D Floating Header -->
+  <div id="floating-header">
+    <h1>3D Floating Header</h1>
+  </div>
 
-<section>
-  <p style="height: 2000px;">
-    Scroll down the page to see the floating header in action.
-  </p>
-</section>
+  <!-- Parallax Background -->
+  <div id="three-container"></div>
+
+  <!-- Flipping Cards Section -->
+  <section id="flipping-cards">
+    <h2>Interactive 3D Flipping Cards</h2>
+    <div class="card-container">
+      <!-- Card 1 -->
+      <div class="flipping-card">
+        <div class="flipping-card-inner">
+          <div class="flipping-card-front">
+            <div class="card-content">
+              <img src="https://via.placeholder.com/150" alt="Front Image">
+              <h3>Front</h3>
+              <p>3D Content Here</p>
+            </div>
+          </div>
+          <div class="flipping-card-back">
+            <div class="card-content">
+              <img src="https://via.placeholder.com/150" alt="Back Image">
+              <h3>Back</h3>
+              <p>Another 3D Scene</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rotating Globe Section -->
+  <section id="rotating-globe">
+    <h2>3D Rotating Globe</h2>
+    <div id="globe-container"></div>
+  </section>
+
+  <!-- Morphing Walls -->
+  <section id="morphing-wall">
+    <div class="morphing-wall"></div>
+  </section>
+
+  <!-- Animated Photo Wall -->
+  <section id="animated-photo-wall">
+    <h2>Animated Photo Wall</h2>
+    <div class="photo-wall">
+      <div class="photo" style="background-image: url('https://via.placeholder.com/300');"></div>
+      <div class="photo" style="background-image: url('https://via.placeholder.com/300/7f7');"></div>
+      <div class="photo" style="background-image: url('https://via.placeholder.com/300/77f');"></div>
+      <div class="photo" style="background-image: url('https://via.placeholder.com/300/f77');"></div>
+    </div>
+  </section>
+
+  <!-- Placeholder for Scrolling -->
+  <section>
+    <p style="height: 2000px;">Placeholder content to test scrolling...</p>
+  </section>
+
+  <!-- JavaScript Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cannon-es/0.21.0/cannon-es.min.js"></script>
+  <script type="module" src="script.js"></script>
+</body>
+</html>
+
