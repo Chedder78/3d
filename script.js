@@ -10,7 +10,7 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 camera.position.set(0, 3, 8);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, 600); // Match CSS height
+renderer.setSize(window.innerWidth, 600);
 renderer.setPixelRatio(window.devicePixelRatio);
 document.getElementById('three-container').appendChild(renderer.domElement);
 
@@ -37,18 +37,33 @@ const world = new CANNON.World();
 world.gravity.set(0, -9.82, 0); // Gravity downwards
 
 // ----------------------------------------------
-// Create Flipping Cards (Planes)
+// Load Textures for Cards
+// ----------------------------------------------
+const textureLoader = new THREE.TextureLoader();
+
+const cardFrontTexture = textureLoader.load('path/to/front-image.jpg'); // Replace with your image path
+const cardBackTexture = textureLoader.load('path/to/back-image.jpg'); // Replace with your image path
+
+// Ensure the images fit the card properly
+cardFrontTexture.wrapS = cardFrontTexture.wrapT = THREE.ClampToEdgeWrapping;
+cardFrontTexture.minFilter = THREE.LinearFilter;
+
+cardBackTexture.wrapS = cardBackTexture.wrapT = THREE.ClampToEdgeWrapping;
+cardBackTexture.minFilter = THREE.LinearFilter;
+
+// ----------------------------------------------
+// Create Flipping Cards (Planes with Images)
 // ----------------------------------------------
 const cardsGroup = new THREE.Group();
 scene.add(cardsGroup);
 
 const cardGeometry = new THREE.PlaneGeometry(2, 3); // Card dimensions
 const cardMaterialFront = new THREE.MeshStandardMaterial({
-  color: 0x0077ff,
+  map: cardFrontTexture, // Front image texture
   side: THREE.DoubleSide,
 });
 const cardMaterialBack = new THREE.MeshStandardMaterial({
-  color: 0xff5500,
+  map: cardBackTexture, // Back image texture
   side: THREE.DoubleSide,
 });
 
