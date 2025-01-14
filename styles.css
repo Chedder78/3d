@@ -1,0 +1,39 @@
+/* General Page Styles */
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  font-family: Arial, sans-serif;
+  background: #f0f0f0;
+}
+
+section {
+  padding: 20px;
+}
+
+/* Floating Header Styles */
+#floating-header {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) translateZ(100px); /* Center the header and give depth */
+  z-index: 100;
+  perspective: 1000px; /* Add perspective for 3D depth */
+  width: 100%;
+  max-width: 800px;
+  text-align: center;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #3f2b96, #a8c0ff);
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); /* Add shadow for floating effect */
+  border-radius: 10px;
+  transform-style: preserve-3d; /* Enable 3D transforms */
+  transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+}
+
+/* Header Text Style */
+#floating-header h1 {
+  font-size: 2rem;
+  transform: translateZ(30px); /* Push the text forward for depth */
+  text-shadow: 0 5px 10px rgba(0, 0, 0, 0.5); /* Add depth to the text */
+}
