@@ -41,8 +41,8 @@ world.gravity.set(0, -9.82, 0); // Gravity downwards
 // ----------------------------------------------
 const textureLoader = new THREE.TextureLoader();
 
-const cardFrontTexture = textureLoader.load('path/to/front-image.jpg'); // Replace with your image path
-const cardBackTexture = textureLoader.load('path/to/back-image.jpg'); // Replace with your image path
+const cardFrontTexture = textureLoader.load('lh44wallart_BGP.jpg'); // Replace with your image path
+const cardBackTexture = textureLoader.load('lh44Art.jpg'); // Replace with your image path
 
 // Ensure the images fit the card properly
 cardFrontTexture.wrapS = cardFrontTexture.wrapT = THREE.ClampToEdgeWrapping;
