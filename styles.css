@@ -2,38 +2,135 @@
 body, html {
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
+  height: 100%;
   font-family: Arial, sans-serif;
-  background: #f0f0f0;
+  overflow-x: hidden;
+  background: radial-gradient(circle at center, #1b2735, #090a0f);
+  color: #fff;
 }
 
-section {
-  padding: 20px;
-}
-
-/* Floating Header Styles */
+/* Floating Header */
 #floating-header {
   position: fixed;
   top: 0;
   left: 50%;
-  transform: translateX(-50%) translateZ(100px); /* Center the header and give depth */
+  transform: translateX(-50%) translateZ(100px);
   z-index: 100;
-  perspective: 1000px; /* Add perspective for 3D depth */
-  width: 100%;
-  max-width: 800px;
-  text-align: center;
-  padding: 10px 20px;
+  perspective: 1000px;
+  padding: 20px 40px;
   background: linear-gradient(135deg, #3f2b96, #a8c0ff);
-  color: #fff;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); /* Add shadow for floating effect */
   border-radius: 10px;
-  transform-style: preserve-3d; /* Enable 3D transforms */
-  transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+  text-align: center;
 }
 
-/* Header Text Style */
 #floating-header h1 {
   font-size: 2rem;
-  transform: translateZ(30px); /* Push the text forward for depth */
-  text-shadow: 0 5px 10px rgba(0, 0, 0, 0.5); /* Add depth to the text */
+  transform: translateZ(30px);
+  text-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
 }
+
+/* Flipping Cards */
+.card-container {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  perspective: 1000px;
+}
+
+.flipping-card {
+  width: 200px;
+  height: 300px;
+  position: relative;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.flipping-card-inner {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  transform-style: preserve-3d;
+  transition: transform 0.8s ease;
+}
+
+.flipping-card:hover .flipping-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flipping-card-front, .flipping-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flipping-card-front {
+  background: linear-gradient(135deg, #3f2b96, #a8c0ff);
+}
+
+.flipping-card-back {
+  background: linear-gradient(135deg, #ff5500, #ffcc00);
+  transform: rotateY(180deg);
+}
+
+/* Rotating Globe Section */
+#rotating-globe {
+  padding: 4rem 0;
+  text-align: center;
+}
+
+#globe-container {
+  width: 400px;
+  height: 400px;
+  margin: 0 auto;
+}
+
+/* Morphing Walls */
+.morphing-wall {
+  width: 300px;
+  height: 300px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3f2b96, #a8c0ff);
+  animation: morph 6s infinite alternate ease-in-out;
+}
+
+@keyframes morph {
+  0%, 100% {
+    border-radius: 50%;
+    transform: scale(1);
+  }
+  50% {
+    border-radius: 10%;
+    transform: scale(1.3);
+  }
+}
+
+/* Animated Photo Wall */
+.photo-wall {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.photo {
+  width: 100%;
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.photo:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.5);
+}
+
