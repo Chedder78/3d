@@ -4,40 +4,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Interactive 3D Particles</title>
+  <title>3D Interactive Fuzzy Particles</title>
   <style>
-    body {
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
       overflow: hidden;
+      background: linear-gradient(135deg, #021524, #042c50);
+      animation: gradientShift 10s infinite alternate;
+    }
+    @keyframes gradientShift {
+      0% { background: linear-gradient(135deg, #021524, #042c50); }
+      100% { background: linear-gradient(135deg, #00203f, #00507a); }
     }
     canvas {
       display: block;
     }
     #overlay {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 2;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       color: white;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, rgba(20, 30, 48, 0.8), rgba(36, 59, 85, 0.8));
-      pointer-events: none;
-    }
-    #overlay h1 {
       font-size: 3rem;
-      text-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+      font-family: Arial, sans-serif;
+      text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.7);
     }
   </style>
 </head>
 <body>
-  <div id="overlay">
-    <h1>Interactive Fuzzy Particles</h1>
-  </div>
+  <div id="overlay">✨ 3D Interactive Fuzzy Particles ✨</div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r136/three.min.js"></script>
   <script src="script.js"></script>
 </body>
