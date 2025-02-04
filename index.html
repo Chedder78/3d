@@ -1,43 +1,19 @@
-<!-- /index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3D Interactive Fuzzy Particles</title>
+  <title>3D Space Scene</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      overflow: hidden;
-      background: linear-gradient(135deg, #021524, #042c50);
-      animation: gradientShift 10s infinite alternate;
-    }
-    @keyframes gradientShift {
-      0% { background: linear-gradient(135deg, #021524, #042c50); }
-      100% { background: linear-gradient(135deg, #00203f, #00507a); }
-    }
-    canvas {
-      display: block;
-    }
-    #overlay {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: white;
-      font-size: 3rem;
-      font-family: Arial, sans-serif;
-      text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.7);
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { overflow: hidden; background: black; }
   </style>
 </head>
 <body>
-  <div id="overlay">✨ 3D Interactive Fuzzy Particles ✨</div>
+  <!-- ✅ Three.js is loaded FIRST -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r136/three.min.js"></script>
-<script src="script.js" defer></script>
+
+  <!-- ✅ Your script runs AFTER Three.js is loaded -->
+  <script src="script.js"></script>
 </body>
 </html>
