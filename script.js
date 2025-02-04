@@ -1,152 +1,106 @@
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import * as CANNON from 'cannon-es';
+// script.js
 
-// ----------------------------------------------
-// Scene, Camera, Renderer
-// ----------------------------------------------
+import * as THREE from 'three';
+
+// Setup Three.js environment
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 3, 8);
-
 const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, 600);
-renderer.setPixelRatio(window.devicePixelRatio);
-document.getElementById('three-container').appendChild(renderer.domElement);
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
 
-// ----------------------------------------------
-// Orbit Controls
-// ----------------------------------------------
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-
-// ----------------------------------------------
-// Lighting
-// ----------------------------------------------
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Global soft light
-scene.add(ambientLight);
-
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-directionalLight.position.set(5, 10, 5);
-scene.add(directionalLight);
-
-// ----------------------------------------------
-// Physics World
-// ----------------------------------------------
-const world = new CANNON.World();
-world.gravity.set(0, -9.82, 0); // Gravity downwards
-
-// ----------------------------------------------
-// Load Textures for Cards
-// ----------------------------------------------
-const textureLoader = new THREE.TextureLoader();
-
-const cardFrontTexture = textureLoader.load('lh44wallart_BGP.jpg'); // Replace with your image path
-const cardBackTexture = textureLoader.load('lh44Art.jpg'); // Replace with your image path
-
-// Ensure the images fit the card properly
-cardFrontTexture.wrapS = cardFrontTexture.wrapT = THREE.ClampToEdgeWrapping;
-cardFrontTexture.minFilter = THREE.LinearFilter;
-
-cardBackTexture.wrapS = cardBackTexture.wrapT = THREE.ClampToEdgeWrapping;
-cardBackTexture.minFilter = THREE.LinearFilter;
-
-// ----------------------------------------------
-// Create Flipping Cards (Planes with Images)
-// ----------------------------------------------
-const cardsGroup = new THREE.Group();
-scene.add(cardsGroup);
-
-const cardGeometry = new THREE.PlaneGeometry(2, 3); // Card dimensions
-const cardMaterialFront = new THREE.MeshStandardMaterial({
-  map: cardFrontTexture, // Front image texture
-  side: THREE.DoubleSide,
-});
-const cardMaterialBack = new THREE.MeshStandardMaterial({
-  map: cardBackTexture, // Back image texture
-  side: THREE.DoubleSide,
+// Resize handling
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-const cardCount = 3;
+// Variables for particles
+const particles = [];
+const particleCount = 70;
+const mouse = new THREE.Vector2();
+const starCount = 150;
 
-for (let i = 0; i < cardCount; i++) {
-  // Create the card as two sides
-  const front = new THREE.Mesh(cardGeometry, cardMaterialFront);
-  const back = new THREE.Mesh(cardGeometry, cardMaterialBack);
+// Gradient background using Three.js
+const gradientTexture = new THREE.TextureLoader().load('https://via.placeholder.com/1920x1080');
+scene.background = gradientTexture;
 
-  // Group the two sides into a single object
-  const card = new THREE.Group();
-  card.add(front, back);
-
-  // Offset back side slightly
-  back.rotation.y = Math.PI; // Rotate to face the opposite direction
-
-  // Position cards
-  card.position.set(i * 3 - 4, 1, 0); // Spread along X-axis
-  cardsGroup.add(card);
-
-  // Add physics body
-  const cardBody = new CANNON.Body({
-    mass: 1, // Dynamic body
-    shape: new CANNON.Box(new CANNON.Vec3(1, 1.5, 0.1)), // Match dimensions
-    position: new CANNON.Vec3(card.position.x, card.position.y, card.position.z),
+// Create fuzzy particle materials
+function createFuzzyParticle() {
+  const geometry = new THREE.SphereGeometry(0.3, 32, 32);
+  const material = new THREE.MeshPhysicalMaterial({
+    color: new THREE.Color(Math.random(), Math.random(), Math.random()),
+    roughness: 0.5,
+    transparent: true,
+    opacity: 0.8,
+    emissive: 0xffffff,
+    emissiveIntensity: 0.6,
   });
 
-  world.addBody(cardBody);
-
-  // Store the card and its physics body together
-  card.userData.body = cardBody;
+  const particle = new THREE.Mesh(geometry, material);
+  particle.position.set(
+    (Math.random() - 0.5) * 30,
+    (Math.random() - 0.5) * 20,
+    (Math.random() - 0.5) * 20
+  );
+  scene.add(particle);
+  particles.push({ mesh: particle, velocity: new THREE.Vector3() });
 }
 
-// ----------------------------------------------
-// Interactivity: Flip Cards
-// ----------------------------------------------
-document.addEventListener('click', (event) => {
-  const mouse = new THREE.Vector2();
-  const raycaster = new THREE.Raycaster();
-
-  // Normalize mouse position
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / 600) * 2 + 1;
-
-  // Raycast from camera to mouse
-  raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObjects(cardsGroup.children, true);
-
-  if (intersects.length > 0) {
-    const clickedCard = intersects[0].object.parent; // Get the card group
-
-    // Apply an impulse to rotate the card
-    const body = clickedCard.userData.body;
-    body.applyLocalImpulse(new CANNON.Vec3(0, 0, 5), new CANNON.Vec3(0, 0, 0)); // Flip forward
-  }
-});
-
-// ----------------------------------------------
-// Animation Loop
-// ----------------------------------------------
-function animate() {
-  // Update physics world
-  world.step(1 / 60);
-
-  // Sync Three.js objects with Cannon.js bodies
-  cardsGroup.children.forEach((card) => {
-    const body = card.userData.body;
-    card.position.copy(body.position);
-    card.quaternion.copy(body.quaternion);
+// Create starry particles
+function createStarParticles() {
+  const starGeometry = new THREE.BufferGeometry();
+  const starMaterial = new THREE.PointsMaterial({
+    color: 0xffffff,
+    size: 0.05,
   });
 
-  controls.update();
-  renderer.render(scene, camera);
+  const starPositions = [];
+  for (let i = 0; i < starCount; i++) {
+    starPositions.push((Math.random() - 0.5) * 100); // X
+    starPositions.push((Math.random() - 0.5) * 100); // Y
+    starPositions.push((Math.random() - 0.5) * 100); // Z
+  }
+
+  starGeometry.setAttribute(
+    'position',
+    new THREE.Float32BufferAttribute(starPositions, 3)
+  );
+  const stars = new THREE.Points(starGeometry, starMaterial);
+  scene.add(stars);
+}
+
+// Add particles and stars
+for (let i = 0; i < particleCount; i++) createFuzzyParticle();
+createStarParticles();
+
+// Add lighting
+const light = new THREE.PointLight(0xffffff, 1, 100);
+light.position.set(10, 10, 10);
+scene.add(light);
+
+// Mouse interactivity
+window.addEventListener('mousemove', (e) => {
+  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+});
+
+// Animation loop
+function animate() {
   requestAnimationFrame(animate);
+
+  particles.forEach((particle) => {
+    const distance = new THREE.Vector3(mouse.x * 10, mouse.y * 10, 0).sub(particle.mesh.position);
+    const force = distance.multiplyScalar(0.01);
+    particle.velocity.add(force);
+    particle.velocity.multiplyScalar(0.95); // Damping
+    particle.mesh.position.add(particle.velocity);
+  });
+
+  renderer.render(scene, camera);
 }
 animate();
 
-// ----------------------------------------------
-// Responsive Canvas
-// ----------------------------------------------
-window.addEventListener('resize', () => {
-  renderer.setSize(window.innerWidth, 600); // Match CSS height
-  camera.aspect = window.innerWidth / 600;
-  camera.updateProjectionMatrix();
-});
+// Camera position
+camera.position.z = 30;
