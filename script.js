@@ -54,6 +54,34 @@ function animate() {
 }
 animate();
 
+const switchMaterial = new THREE.MeshStandardMaterial({ 
+    color: 0x111111, 
+    metalness: 1, 
+    roughness: 0.1 
+});
+
+const neonMaterial = new THREE.MeshStandardMaterial({ 
+    emissive: 0x00ffff, 
+    emissiveIntensity: 2, 
+    color: 0x00cccc 
+});
+
+const base = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 0.2, 64), switchMaterial);
+scene.add(base);
+
+const toggle = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.15, 16, 100), neonMaterial);
+toggle.rotation.x = Math.PI / 2;
+toggle.position.y = 0.3;
+scene.add(toggle);
+
+// Pulse Animation
+function animateNeon() {
+    toggle.material.emissiveIntensity = 1.5 + Math.sin(Date.now() * 0.005) * 0.5;
+    requestAnimationFrame(animateNeon);
+}
+animateNeon();
+
+
 // Window Resize
 window.addEventListener('resize', () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
