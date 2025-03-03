@@ -64,3 +64,104 @@
 
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Switch (Embedded)</title>
+    <style>
+        body { margin: 0; background-color: #222; color: white; font-family: Arial, sans-serif; }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .switch-box {
+            width: 300px;
+            height: 300px;
+            background: black;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        canvas {
+            border-radius: 15px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <h2>Interactive 3D Switch</h2>
+    <div class="switch-box" id="switch-container"></div>
+</div>
+
+<script>
+    let scene, camera, renderer, switchBase, switchButton, light, isOn = false;
+
+    function init() {
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+        camera.position.set(0, 2, 5);
+
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(300, 300);
+        document.getElementById('switch-container').appendChild(renderer.domElement);
+
+        // Switch Base
+        const baseGeometry = new THREE.CylinderGeometry(1, 1, 0.2, 32);
+        const baseMaterial = new THREE.MeshStandardMaterial({ 
+            color: 0x333333, 
+            metalness: 1, 
+            roughness: 0.2 
+        });
+        switchBase = new THREE.Mesh(baseGeometry, baseMaterial);
+        scene.add(switchBase);
+
+        // Switch Button
+        const buttonGeometry = new THREE.SphereGeometry(0.4, 32, 32);
+        const buttonMaterial = new THREE.MeshStandardMaterial({ 
+            color: 0x00ff99, 
+            emissive: 0x00ff99, 
+            emissiveIntensity: 0.5, 
+            metalness: 1, 
+            roughness: 0.1 
+        });
+        switchButton = new THREE.Mesh(buttonGeometry, buttonMaterial);
+        switchButton.position.y = 0.3;
+        scene.add(switchButton);
+
+        // Lights
+        light = new THREE.PointLight(0xffffff, 1.5, 10);
+        light.position.set(2, 3, 2);
+        scene.add(light);
+
+        // Click to Toggle
+        document.getElementById('switch-container').addEventListener('click', toggleSwitch);
+        
+        animate();
+    }
+
+    function toggleSwitch() {
+        isOn = !isOn;
+        switchButton.position.y = isOn ? 0.5 : 0.3;
+        switchButton.material.color.set(isOn ? 0xff0000 : 0x00ff99);
+        switchButton.material.emissive.set(isOn ? 0xff0000 : 0x00ff99);
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+    }
+
+    // Initialize Scene
+    init();
+</script>
+
+</body>
+</html>
